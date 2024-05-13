@@ -1,0 +1,1 @@
+# springai-ollama-demo
