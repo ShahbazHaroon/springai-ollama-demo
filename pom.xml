@@ -23,11 +23,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
+    <groupId>springai-ollama-demo</groupId>
+    <artifactId>springai-ollama-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>Demo project for Spring Boot</description>
+    <name>springai-ollama-demo</name>
+    <description>Spring AI Ollama Demo Project</description>
     <packaging>war</packaging>
 
     <properties>

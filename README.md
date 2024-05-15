@@ -75,7 +75,7 @@ Again, I like what it’s come up with. How about if we ask it to categorise the
 ollama run mistral --verbose "If you had to categorise this article, what tags would you use?: $(cat bbc.txt)"
 
 ollama run mistral --verbose "What's the sentiment of this article: $(cat bbc.txt)"
-```
+
 # API Endpoint
 **To check application status:**
 ```
@@ -84,23 +84,12 @@ Endpoint: http://localhost:8081/api/v1/ai/status
 Response:
 springai-ollama-demo is up and running!
 ```
-**To call endpoint with default Query Param: Why is the sky blue?**
+
+**To call endpoint with JSON body:**
 ```
-Method: GET
+Method: POST
 Endpoint: http://localhost:8081/api/v1/ai/generate
-Default Question: Why is the sky blue?
-```
-**To call endpoint with Query Param: tell the joke for engineer**
-```
-Method: GET
-Endpoint: http://localhost:8081/api/v1/ai/generate
-Query Param:
-promptMessage: tell the joke for engineer
-```
-**To call endpoint with Path Variable: Write a short JD for Java Engineer**
-```
-Method: GET
-Endpoint: http://localhost:8081/api/v1/ai/generate/{topic}
-Path Variable:
-Write a short JD for Java Engineer
+{
+    "promptMessage": "Please identify the issue and fix; keep in mind that this is Java code. System.Out.prinlnln(\"APP IS RUNNING\");\n}"
+}
 ```

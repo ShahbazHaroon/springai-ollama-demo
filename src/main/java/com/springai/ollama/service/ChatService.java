@@ -21,20 +21,8 @@ public class ChatService {
 
     private final ChatClient chatClient;
 
-    public ChatResponse generateAsQueryParameter(String promptMessage) {
-        log.info("ChatService >>> generateAsQueryParameter called");
-        try {
-            final String llamaResponse = chatClient.call(promptMessage);
-            return new ChatResponse().setMessage(llamaResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("An error occurred during chat generation", e);
-            throw new ServiceUnavailableException("An error occurred during chat generation");
-        }
-    }
-
-    public ChatResponse generateAsPathVariable(String topic) {
-        log.info("ChatService >>> generateAsPathVariable called");
+    public ChatResponse generate(final String topic) {
+        log.info("ChatService >>> generate method called");
         try {
             final String llamaResponse = chatClient.call(topic);
             return new ChatResponse().setMessage(llamaResponse);

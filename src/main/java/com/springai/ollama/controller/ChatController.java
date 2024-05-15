@@ -7,9 +7,11 @@
 
 package com.springai.ollama.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springai.ollama.constant.AppConstant;
 import com.springai.ollama.exception.MissingInputException;
-import com.springai.ollama.exception.ServiceUnavailableException;
+import com.springai.ollama.request.ChatRequest;
 import com.springai.ollama.response.ChatResponse;
 import com.springai.ollama.service.ChatService;
 import lombok.AllArgsConstructor;
@@ -26,11 +28,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(AppConstant.REQUEST_MAPPING)
 public class ChatController {
 
+    private final ObjectMapper objectMapper;
+
     private final ChatService chatService;
 
     @GetMapping("/v1/ai/status")
     public ResponseEntity<String> rootPageCheck(@Value("${spring.application.name}") String appName) {
-        log.info("ChatController >>> rootPageCheck called");
+        log.info("ChatController >>> rootPageCheck method called");
         //Check input parameter
         if (!StringUtils.hasText(appName)) {
             throw new MissingInputException(AppConstant.INPUT_PARAMETER_VALIDATION);
@@ -38,23 +42,22 @@ public class ChatController {
         return new ResponseEntity<>(appName + " is up and running!", HttpStatus.OK);
     }
 
-    @GetMapping("/v1/ai/generate")
-    public ResponseEntity<ChatResponse> generateAsQueryParameter(
-            @RequestParam(value = "promptMessage", defaultValue = "Why is the sky blue?")
-            String promptMessage) {
-        log.info("ChatController >>> generateAsQueryParameter called");
-            final ChatResponse serviceResponse = chatService.generateAsQueryParameter(promptMessage);
-            return ResponseEntity.status(HttpStatus.OK).body(serviceResponse);
-    }
-
-    @GetMapping("/v1/ai/generate/{topic}")
-    public ResponseEntity<ChatResponse> generateAsPathVariable(@PathVariable String topic) {
-        log.info("ChatController >>> generateAsPathVariable called");
+    @PostMapping("/v1/ai/generate")
+    public ResponseEntity<ChatResponse> generate(
+            @RequestBody final ChatRequest chatRequest) {
+        log.info("ChatController >>> generate method called");
         //Check input parameter
-        if (!StringUtils.hasText(topic)) {
+        if (!StringUtils.hasText(chatRequest.getPromptMessage())) {
             throw new MissingInputException(AppConstant.INPUT_PARAMETER_VALIDATION);
         }
-        final ChatResponse serviceResponse = chatService.generateAsPathVariable(topic);
-        return ResponseEntity.status(HttpStatus.OK).body(serviceResponse);
+        try {
+            //Convert the ChatRequest object to JSON
+            String requestBody = objectMapper.writeValueAsString(chatRequest.getPromptMessage());
+            final ChatResponse serviceResponse = chatService.generate(requestBody);
+            return ResponseEntity.status(HttpStatus.OK).body(serviceResponse);
+        } catch (JsonProcessingException e) {
+            log.error("An error occurred during Convert the ChatRequest object to JSON", e);
+            throw new RuntimeException(e);
+        }
     }
 }
