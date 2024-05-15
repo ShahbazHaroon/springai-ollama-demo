@@ -76,6 +76,34 @@ ollama run mistral --verbose "If you had to categorise this article, what tags w
 
 ollama run mistral --verbose "What's the sentiment of this article: $(cat bbc.txt)"
 
+# To run Open WebUI With Docker
+**On your computer:**
+```
+docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui_ui_only --restart always ghcr.io/open-webui/open-webui:main
+```
+**On a Different Server:**
+```
+docker run -d -p 3000:8080 -e OLLAMA_BASE_URL=https://example.com -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+```
+**With Nvidia GPU support:**
+```
+docker run -d -p 3000:8080 --gpus all --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:cuda
+```
+
+# To run Open WebUI with Bundled Ollama Support
+**For CPU only:**
+```
+docker run -d -p 3000:8080 -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+```
+**With GPU Support:**
+```
+docker run -d -p 3000:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
+```
+**To check Ollama Web UI is running:**
+```
+http://localhost:3000
+```
+
 # API Endpoint
 **To check application status:**
 ```
@@ -84,7 +112,6 @@ Endpoint: http://localhost:8081/api/v1/ai/status
 Response:
 springai-ollama-demo is up and running!
 ```
-
 **To call endpoint with JSON body:**
 ```
 Method: POST
